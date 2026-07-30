@@ -115,7 +115,12 @@ MONTHS = [
     {"id": "abril", "name": "Abril 2026"},
     {"id": "mayo", "name": "Mayo 2026"},
     {"id": "junio", "name": "Junio 2026"},
-    {"id": "julio", "name": "Julio 2026"}
+    {"id": "julio", "name": "Julio 2026"},
+    {"id": "agosto", "name": "Agosto 2026"},
+    {"id": "septiembre", "name": "Septiembre 2026"},
+    {"id": "octubre", "name": "Octubre 2026"},
+    {"id": "noviembre", "name": "Noviembre 2026"},
+    {"id": "diciembre", "name": "Diciembre 2026"}
 ]
 
 def load_metadata():
