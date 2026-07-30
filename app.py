@@ -214,9 +214,12 @@ def actividades():
         if month_id in gallery:
             gallery[month_id].append(info)
             
+    # Para la vista pública, mostrar únicamente los meses que ya tienen contenido publicado
+    visible_months = [m for m in MONTHS if len(gallery[m['id']]) > 0]
+    
     return render_template('actividades.html', 
                            active_page='actividades', 
-                           months=MONTHS, 
+                           months=visible_months, 
                            gallery=gallery)
 
 @app.route('/contacto', methods=['GET', 'POST'])

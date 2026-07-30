@@ -22,7 +22,8 @@
             </p>
         </div>
 
-        <!-- Pestañas de Navegación por Mes (Enero a Diciembre 2026) -->
+        {% if months %}
+        <!-- Pestañas de Navegación por Mes -->
         <ul class="nav nav-tabs month-tabs" id="monthsTab" role="tablist">
             {% for m in months %}
             <li class="nav-item" role="presentation">
@@ -104,22 +105,23 @@
                     </div>
                     {% endfor %}
                 </div>
-                {% else %}
-                <!-- Placeholder de Galería Vacía (Público) -->
-                <div class="empty-gallery-placeholder py-5">
-                    <div class="empty-gallery-icon">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                    </div>
-                    <h3 class="fs-5 text-dark mb-2 fw-bold">Material en Proceso</h3>
-                    <p class="text-muted mx-auto" style="max-width: 480px;">
-                        Las infografías correspondientes al mes de <strong>{{ m.name }}</strong> serán publicadas el día 9 de dicho mes. Te invitamos a regresar más tarde.
-                    </p>
-                </div>
                 {% endif %}
                 
             </div>
             {% endfor %}
         </div>
+        {% else %}
+        <!-- Placeholder cuando no hay meses publicados -->
+        <div class="empty-gallery-placeholder py-5 text-center">
+            <div class="empty-gallery-icon mb-3">
+                <i class="fa-solid fa-folder-open fa-3x text-muted"></i>
+            </div>
+            <h3 class="fs-5 text-dark mb-2 fw-bold">Materiales en Proceso</h3>
+            <p class="text-muted mx-auto" style="max-width: 480px;">
+                Actualmente no hay infografías publicadas. En cuanto el Administrador suba contenido para un nuevo mes, aparecerá aquí de forma automática.
+            </p>
+        </div>
+        {% endif %}
         
     </div>
 </section>
