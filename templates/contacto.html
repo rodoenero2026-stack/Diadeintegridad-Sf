@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Contacto y Buzón - Día por la Integridad | San Fernando, Chiapas{% endblock %}
+
+{% block content %}
+<!-- Banner de Cabecera -->
+<section class="hero-gob py-4 text-center">
+    <div class="container">
+        <h1 class="fs-2 mb-2">Contacto y Buzón de Integridad</h1>
+        <p class="mb-0 text-white text-opacity-75">Canales oficiales de atención ciudadana y denuncias éticas en San Fernando, Chiapas</p>
+    </div>
+</section>
+
+<!-- Sección de Contacto -->
+<section class="section-padding bg-white">
+    <div class="container">
+        <div class="row g-5">
+            
+            <!-- Columna de Datos de Contacto -->
+            <div class="col-lg-5">
+                <h2 class="section-title-left mb-4">Datos del Municipio</h2>
+                <p class="text-secondary mb-4">
+                    La Presidencia Municipal de San Fernando, Chiapas, a través del Órgano Interno de Control y la Unidad de Prevención y Honestidad, pone a tu disposición los siguientes medios de contacto oficial.
+                </p>
+                
+                <!-- Tarjeta de Información -->
+                <div class="contact-info-card mb-4">
+                    <h3 class="fs-4 text-white mb-4 fw-bold"><i class="fa-solid fa-building-user me-2 text-warning"></i>Ayuntamiento</h3>
+                    
+                    <!-- Dirección -->
+                    <div class="contact-info-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div>
+                            <div class="contact-info-title">Dirección Física</div>
+                            <div class="contact-info-text">
+                                Palacio Municipal<br>
+                                Calle Central Norte s/n, Colonia Centro,<br>
+                                San Fernando, Chiapas, México. C.P. 29120.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Teléfono -->
+                    <div class="contact-info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <div>
+                            <div class="contact-info-title">Atención Telefónica</div>
+                            <div class="contact-info-text">
+                                +52 (961) 614-xxxx<br>
+                                Extensión Órgano Interno de Control: 104
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Horario -->
+                    <div class="contact-info-item">
+                        <i class="fa-solid fa-clock"></i>
+                        <div>
+                            <div class="contact-info-title">Horario de Oficina</div>
+                            <div class="contact-info-text">
+                                Lunes a Viernes de 8:00 AM a 4:00 PM<br>
+                                (Días hábiles oficiales)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mapa de Ubicación -->
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-header bg-success text-white py-3 fw-bold" style="background-color: var(--gob-green-dark) !important;">
+                        <i class="fa-solid fa-map-location-dot me-2"></i>Ubicación Geográfica
+                    </div>
+                    <div class="ratio ratio-16x9">
+                        <!-- Mapa interactivo utilizando OpenStreetMap (iframe sin API key pública) -->
+                        <iframe 
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=-93.2127%2C16.8643%2C-93.1979%2C16.8773&amp;layer=mapnik&amp;marker=16.8708%2C-93.2053" 
+                            style="border: 0;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                    <div class="card-footer bg-light text-center py-2">
+                        <a href="https://www.openstreetmap.org/?mlat=16.8708&amp;mlon=-93.2053#map=16/16.8708/-93.2053" target="_blank" class="text-success small fw-bold text-decoration-none">
+                            <i class="fa-solid fa-up-right-from-square me-1"></i>Ver en mapa completo
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Columna de Buzón Digital de Integridad -->
+            <div class="col-lg-7">
+                <div class="p-4 p-md-5 rounded-4 shadow-md bg-light border border-success border-opacity-10">
+                    <h2 class="fs-3 text-dark fw-bold mb-3">Buzón de Integridad y Ética</h2>
+                    <p class="text-secondary mb-4">
+                        Este buzón digital es una herramienta segura, confidencial y directa para reportar cualquier conducta contraria al <strong>Código de Ética y Reglas de Integridad</strong> por parte de personal municipal, así como para enviar sugerencias orientadas a mejorar la transparencia en San Fernando, Chiapas.
+                    </p>
+                    
+                    <form action="{{ url_for('contacto') }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="row g-3">
+                            <!-- Nombre -->
+                            <div class="col-md-6">
+                                <label for="formNombre" class="form-label fw-bold text-dark">Nombre Completo</label>
+                                <input type="text" class="form-control gob-form-control" id="formNombre" name="nombre" placeholder="Ingresa tu nombre..." required>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label for="formEmail" class="form-label fw-bold text-dark">Correo Electrónico</label>
+                                <input type="email" class="form-control gob-form-control" id="formEmail" name="email" placeholder="correo@ejemplo.com" required>
+                            </div>
+                            
+                            <!-- Asunto -->
+                            <div class="col-md-12">
+                                <label for="formAsunto" class="form-label fw-bold text-dark">Tipo de Solicitud</label>
+                                <select class="form-select gob-form-control" id="formAsunto" name="asunto" required>
+                                    <option value="" disabled selected>Selecciona una opción...</option>
+                                    <option value="Sugerencia de Transparencia">Sugerencia de Transparencia</option>
+                                    <option value="Consulta del Código de Ética">Consulta del Código de Ética</option>
+                                    <option value="Reporte de Conducta Ética">Reporte de Conducta Ética (Buzón de Quejas)</option>
+                                    <option value="Felicitación por Servicio">Felicitación por Servicio Público</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Mensaje -->
+                            <div class="col-md-12">
+                                <label for="formMensaje" class="form-label fw-bold text-dark">Mensaje o Detalles del Reporte</label>
+                                <textarea class="form-control gob-form-control" id="formMensaje" name="mensaje" rows="6" placeholder="Detalla tu mensaje de la forma más clara posible..." required></textarea>
+                            </div>
+                            
+                            <!-- Protección de Datos Aviso -->
+                            <div class="col-md-12">
+                                <div class="p-3 bg-white rounded-3 border border-dark border-opacity-10 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="formPrivacy" required>
+                                        <label class="form-check-input-label small text-secondary" for="formPrivacy">
+                                            Acepto los términos del <strong>Aviso de Privacidad Simplificado</strong>. Toda información reportada será tratada con absoluta confidencialidad y utilizada exclusivamente para la investigación y mejora del servicio municipal.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón de Envío -->
+                            <div class="col-md-12 text-end">
+                                <button type="submit" class="btn btn-gob-primary w-100 py-3">
+                                    <i class="fa-solid fa-paper-plane me-2"></i>Enviar Solicitud al Buzón
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+{% endblock %}

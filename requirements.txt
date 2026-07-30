@@ -1,0 +1,5 @@
+Flask>=2.0.0
+Werkzeug>=2.0.0
+Flask-WTF>=1.0.0
+gunicorn>=20.1.0
+cloudinary>=1.36.0

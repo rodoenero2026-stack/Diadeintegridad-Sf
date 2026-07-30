@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - Panel Administrativo | San Fernando{% endblock %}
+
+{% block content %}
+<section class="section-padding" style="background: radial-gradient(circle at top, rgba(194, 157, 93, 0.05) 0%, var(--gob-light) 100%); min-height: 70vh; display: flex; align-items: center;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                
+                <!-- Tarjeta de Login -->
+                <div class="card login-card">
+                    <div class="login-header">
+                        <div class="logo-emblem mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.6rem; border-color: var(--gob-gold);">SF</div>
+                        <h2 class="fs-4 mb-1 fw-bold">Acceso Administrativo</h2>
+                        <p class="mb-0 text-white text-opacity-75 small">Día por la Integridad - San Fernando, Chiapas</p>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        
+                        <form action="{{ url_for('login') }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <!-- Usuario -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label fw-bold text-dark">Nombre de Usuario</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 gob-form-control py-0"><i class="fa-solid fa-user text-muted"></i></span>
+                                    <input type="text" class="form-control gob-form-control border-start-0" id="username" name="username" placeholder="Ingrese su usuario" required autofocus>
+                                </div>
+                            </div>
+                            
+                            <!-- Contraseña -->
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-bold text-dark">Contraseña</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 gob-form-control py-0"><i class="fa-solid fa-lock text-muted"></i></span>
+                                    <input type="password" class="form-control gob-form-control border-start-0" id="password" name="password" placeholder="Ingrese su contraseña" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón de Envío -->
+                            <button type="submit" class="btn btn-gob-primary w-100 py-3 mb-3">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>Iniciar Sesión
+                            </button>
+                            
+                            <div class="text-center">
+                                <a href="{{ url_for('inicio') }}" class="text-success small fw-bold text-decoration-none">
+                                    <i class="fa-solid fa-arrow-left me-1"></i> Regresar al Portal Público
+                                </a>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+                
+                <!-- Nota Informativa -->
+                <div class="text-center mt-4">
+                    <p class="text-muted small">
+                        <i class="fa-solid fa-circle-info me-1"></i> Este es un panel privado de uso exclusivo para personal autorizado de la Contraloría Municipal de San Fernando, Chiapas.
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

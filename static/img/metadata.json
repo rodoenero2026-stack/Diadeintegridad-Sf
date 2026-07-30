@@ -1,0 +1,72 @@
+[
+    {
+        "id": "enero_20260720_145158",
+        "month": "enero",
+        "title": "Enero",
+        "description": "",
+        "filename": "info_enero_20260720_145158.jpg",
+        "url": "img/info_enero_20260720_145158.jpg",
+        "is_pdf": false,
+        "date_uploaded": "20/07/2026 14:51"
+    },
+    {
+        "id": "febrero_20260720_151535",
+        "month": "febrero",
+        "title": "Febrero",
+        "description": "",
+        "filename": "info_febrero_20260720_151535.jpg",
+        "url": "img/info_febrero_20260720_151535.jpg",
+        "is_pdf": false,
+        "date_uploaded": "20/07/2026 15:15"
+    },
+    {
+        "id": "marzo_20260720_153353",
+        "month": "marzo",
+        "title": "Marzo",
+        "description": "",
+        "filename": "info_marzo_20260720_153353.jpg",
+        "url": "img/info_marzo_20260720_153353.jpg",
+        "is_pdf": false,
+        "date_uploaded": "20/07/2026 15:33"
+    },
+    {
+        "id": "abril_20260720_153410",
+        "month": "abril",
+        "title": "Abril",
+        "description": "",
+        "filename": "info_abril_20260720_153410.jpeg",
+        "url": "img/info_abril_20260720_153410.jpeg",
+        "is_pdf": false,
+        "date_uploaded": "20/07/2026 15:34"
+    },
+    {
+        "id": "mayo_20260720_153536",
+        "month": "mayo",
+        "title": "Mayo",
+        "description": "",
+        "filename": "info_mayo_20260720_153536.jpeg",
+        "url": "img/info_mayo_20260720_153536.jpeg",
+        "is_pdf": false,
+        "date_uploaded": "20/07/2026 15:35"
+    },
+    {
+        "id": "junio_20260720_153610",
+        "month": "junio",
+        "title": "Junio ",
+        "description": "",
+        "filename": "info_junio_20260720_153610.jpeg",
+        "url": "img/info_junio_20260720_153610.jpeg",
+        "is_pdf": false,
+        "date_uploaded": "20/07/2026 15:36"
+    },
+    {
+        "id": "julio_20260720_153629",
+        "month": "julio",
+        "title": "Julio",
+        "description": "",
+        "filename": "info_julio_20260720_153629.jpeg",
+        "url": "img/info_julio_20260720_153629.jpeg",
+        "is_pdf": false,
+        "date_uploaded": "20/07/2026 15:36"
+    }
+]

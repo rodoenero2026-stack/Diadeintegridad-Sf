@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Actividades 2026 - Día por la Integridad | San Fernando, Chiapas{% endblock %}
+
+{% block content %}
+<!-- Banner de Cabecera -->
+<section class="hero-gob py-4 text-center">
+    <div class="container">
+        <h1 class="fs-2 mb-2">Galería de Actividades 2026</h1>
+        <p class="mb-0 text-white text-opacity-75">Visualización mensual de infografías y materiales de integridad gubernamental</p>
+    </div>
+</section>
+
+<!-- Sección de Galería -->
+<section class="section-padding bg-white">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <h2 class="fs-3 text-dark fw-bold mb-2">Infografías de Integridad y Ética</h2>
+            <p class="text-muted mx-auto" style="max-width: 600px;">
+                Consulta los principios, valores e infografías mensuales publicados por la Unidad de Prevención y Honestidad de San Fernando, Chiapas.
+            </p>
+        </div>
+
+        <!-- Pestañas de Navegación por Mes (Enero a Julio 2026) -->
+        <ul class="nav nav-tabs month-tabs" id="monthsTab" role="tablist">
+            {% for m in months %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {% if loop.first %}active{% endif %}" 
+                        id="tab-{{ m.id }}" 
+                        data-bs-toggle="tab" 
+                        data-bs-target="#pane-{{ m.id }}" 
+                        type="button" 
+                        role="tab" 
+                        aria-controls="pane-{{ m.id }}" 
+                        aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                    <i class="fa-solid fa-calendar me-2"></i>{{ m.name }}
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Contenido de las Pestañas -->
+        <div class="tab-content" id="monthsTabContent">
+            {% for m in months %}
+            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" 
+                 id="pane-{{ m.id }}" 
+                 role="tabpanel" 
+                 aria-labelledby="tab-{{ m.id }}">
+                
+                {% set items = gallery[m.id] %}
+                
+                {% if items %}
+                <!-- Grilla de Infografías -->
+                <div class="row g-4">
+                    {% for item in items %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card infografia-card h-100">
+                            <!-- Badge indicador -->
+                            <span class="infografia-badge">
+                                {% if item.is_pdf %}PDF Documento{% else %}Infografía{% endif %}
+                            </span>
+                            
+                            <!-- Contenedor del archivo / Vista previa -->
+                            <div class="infografia-img-container">
+                                {% if item.is_pdf %}
+                                <div class="infografia-pdf-placeholder">
+                                    <i class="fa-solid fa-file-pdf fa-4x mb-2"></i>
+                                    <span class="fw-bold">Visualizar PDF</span>
+                                </div>
+                                {% else %}
+                                <img src="{{ get_file_url(item.url) }}" class="infografia-img" alt="{{ item.title }}">
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Cuerpo de la tarjeta -->
+                            <div class="infografia-card-body d-flex flex-column">
+                                <h3 class="infografia-title">{{ item.title }}</h3>
+                                <p class="infografia-desc flex-grow-1">{{ item.description or 'Sin descripción disponible.' }}</p>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                    <span class="text-muted small">
+                                        <i class="fa-solid fa-clock me-1"></i>{{ item.date_uploaded }}
+                                    </span>
+                                    
+                                    <div class="d-flex gap-2">
+                                        {% if not item.is_pdf %}
+                                        <button class="btn btn-sm btn-outline-success btn-preview" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#previewModal" 
+                                                data-src="{{ get_file_url(item.url) }}"
+                                                data-title="{{ item.title }}">
+                                            <i class="fa-solid fa-magnifying-glass-plus me-1"></i> Ampliar
+                                        </button>
+                                        {% endif %}
+                                        
+                                        <a href="{{ get_file_url(item.url) }}" target="_blank" class="btn btn-sm btn-gob-outline py-1 px-2">
+                                            <i class="fa-solid fa-download me-1"></i> Descargar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <!-- Placeholder de Galería Vacía (Público) -->
+                <div class="empty-gallery-placeholder py-5">
+                    <div class="empty-gallery-icon">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <h3 class="fs-5 text-dark mb-2 fw-bold">Material en Proceso</h3>
+                    <p class="text-muted mx-auto" style="max-width: 480px;">
+                        Las infografías correspondientes al mes de <strong>{{ m.name }}</strong> serán publicadas el día 9 de dicho mes. Te invitamos a regresar más tarde.
+                    </p>
+                </div>
+                {% endif %}
+                
+            </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+</section>
+
+<!-- MODAL DE VISTA PREVIA (LIGHTBOX) -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 bg-transparent">
+            <div class="modal-header border-0 text-white p-0 pb-2">
+                <h5 class="modal-title fw-bold" id="previewModalLabel">Vista Previa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img src="" id="lightbox-img" class="img-fluid rounded-3 shadow-lg" style="max-height: 80vh;" alt="Vista previa">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const previewModal = document.getElementById('previewModal');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const previewTitle = document.getElementById('previewModalLabel');
+        
+        previewModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const src = button.getAttribute('data-src');
+            const title = button.getAttribute('data-title');
+            
+            lightboxImg.src = src;
+            previewTitle.textContent = title;
+        });
+
+        previewModal.addEventListener('hidden.bs.modal', function() {
+            lightboxImg.src = '';
+        });
+    });
+</script>
+{% endblock %}

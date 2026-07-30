@@ -1,0 +1,484 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Control - Día por la Integridad | San Fernando{% endblock %}
+
+{% block content %}
+<!-- Banner de Cabecera -->
+<section class="hero-gob py-4">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h1 class="fs-2 mb-1">Panel de Control Ético</h1>
+            <p class="mb-0 text-white text-opacity-75">Administración de materiales didácticos y Buzón de Integridad municipal</p>
+        </div>
+        <div class="bg-white bg-opacity-10 px-3 py-2 rounded-3 border border-white border-opacity-10 text-end">
+            <span class="text-white small d-block">Sesión activa como:</span>
+            <span class="text-warning fw-bold small"><i class="fa-solid fa-user-gear me-1"></i>{{ session.get('username') }}</span>
+        </div>
+    </div>
+</section>
+
+<!-- Panel de Control Principal -->
+<section class="section-padding bg-white">
+    <div class="container">
+        
+        <!-- Pestañas de Navegación del Panel -->
+        <ul class="nav nav-tabs nav-fill mb-4 custom-admin-tabs" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-bold py-3" id="infografias-tab" data-bs-toggle="tab" data-bs-target="#infografias-tab-pane" type="button" role="tab" aria-controls="infografias-tab-pane" aria-selected="true">
+                    <i class="fa-solid fa-folder-open me-2 text-warning"></i>Materiales de Integridad (Infografías)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold py-3" id="buzon-tab" data-bs-toggle="tab" data-bs-target="#buzon-tab-pane" type="button" role="tab" aria-controls="buzon-tab-pane" aria-selected="false">
+                    <i class="fa-solid fa-inbox me-2 text-warning"></i>Buzón de Comentarios y Quejas
+                    {% if unread_count and unread_count > 0 %}
+                        <span class="badge bg-danger rounded-pill ms-2 animate__animated animate__pulse animate__infinite">{{ unread_count }} nuevo{% if unread_count > 1 %}s{% endif %}</span>
+                    {% endif %}
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="adminTabsContent">
+            
+            <!-- PESTAÑA 1: MATERIALES DE INTEGRIDAD -->
+            <div class="tab-pane fade show active" id="infografias-tab-pane" role="tabpanel" aria-labelledby="infografias-tab" tabindex="0">
+                <!-- Encabezado de Acciones -->
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <div>
+                        <h2 class="fs-4 text-dark mb-1 fw-bold">Catálogo de Infografías</h2>
+                        <p class="text-muted small mb-0">Carga, edita o elimina materiales didácticos del catálogo.</p>
+                    </div>
+                    <button class="btn btn-gob-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="fa-solid fa-cloud-arrow-up me-2 text-warning"></i>Subir Nueva Infografía
+                    </button>
+                </div>
+
+                <!-- Tabla de Registros -->
+                <div class="admin-table-container">
+                    {% if infografias %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle table-gob mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 80px;">Vista Previa</th>
+                                    <th>Título</th>
+                                    <th>Mes</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha Registro</th>
+                                    <th style="width: 150px;" class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for info in infografias %}
+                                <tr>
+                                    <!-- Vista previa -->
+                                    <td>
+                                        {% if info.is_pdf %}
+                                        <div class="admin-pdf-thumb" title="Documento PDF">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                        </div>
+                                        {% else %}
+                                        <img src="{{ get_file_url(info.url) }}" class="admin-thumb" alt="Vista previa">
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <!-- Título -->
+                                    <td>
+                                        <strong class="text-dark">{{ info.title }}</strong>
+                                        <span class="d-block small text-muted">Archivo: {{ info.filename }}</span>
+                                    </td>
+                                    
+                                    <!-- Mes -->
+                                    <td>
+                                        {% for m in months %}
+                                            {% if m.id == info.month %}
+                                            <span class="badge bg-success text-white px-2 py-1" style="background-color: var(--gob-green-medium) !important;">{{ m.name }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    
+                                    <!-- Descripción -->
+                                    <td>
+                                        <span class="text-secondary small d-inline-block text-truncate" style="max-width: 250px;" title="{{ info.description }}">
+                                            {{ info.description or 'Sin descripción.' }}
+                                        </span>
+                                    </td>
+                                    
+                                    <!-- Fecha de carga -->
+                                    <td class="small text-muted">{{ info.date_uploaded }}</td>
+                                    
+                                    <!-- Acciones -->
+                                    <td class="text-end">
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <!-- Botón Editar -->
+                                            <button class="btn btn-sm btn-outline-primary btn-edit" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#editModal"
+                                                    data-id="{{ info.id }}"
+                                                    data-title="{{ info.title }}"
+                                                    data-month="{{ info.month }}"
+                                                    data-description="{{ info.description }}">
+                                                <i class="fa-solid fa-pen-to-square"></i> Editar
+                                            </button>
+                                            
+                                            <!-- Botón Eliminar -->
+                                            <form action="{{ url_for('eliminar_infografia', info_id=info.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente la infografía &quot;{{ info.title }}&quot;? Se borrará el archivo del servidor.');" class="d-inline">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fa-solid fa-trash-can"></i> Eliminar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <!-- Estado Vacío -->
+                    <div class="text-center py-5">
+                        <i class="fa-solid fa-folder-open fa-3x text-muted mb-3"></i>
+                        <h3 class="fs-5 text-dark mb-1 fw-bold">Catálogo Vacío</h3>
+                        <p class="text-muted mb-4">No se han subido materiales a la base de datos de San Fernando.</p>
+                        <button class="btn btn-gob-outline" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                            <i class="fa-solid fa-plus me-1"></i>Subir primer archivo
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- PESTAÑA 2: BUZÓN DE COMENTARIOS Y QUEJAS -->
+            <div class="tab-pane fade" id="buzon-tab-pane" role="tabpanel" aria-labelledby="buzon-tab" tabindex="0">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <div>
+                        <h2 class="fs-4 text-dark mb-1 fw-bold">Mensajes Recibidos en el Buzón</h2>
+                        <p class="text-muted small mb-0">Gestión de consultas, sugerencias y reportes recibidos desde la página de contacto.</p>
+                    </div>
+                </div>
+
+                <div class="admin-table-container">
+                    {% if mensajes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle table-gob mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Estado</th>
+                                    <th>Ciudadano</th>
+                                    <th>Contacto</th>
+                                    <th>Tipo de Solicitud</th>
+                                    <th>Fecha</th>
+                                    <th style="width: 200px;" class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for msg in mensajes %}
+                                <tr class="{% if not msg.leido %}table-warning bg-opacity-10 fw-semibold{% endif %}">
+                                    <!-- Estado -->
+                                    <td>
+                                        {% if msg.leido %}
+                                            <span class="badge bg-secondary px-2 py-1"><i class="fa-solid fa-envelope-open me-1"></i>Leído</span>
+                                        {% else %}
+                                            <span class="badge bg-danger px-2 py-1"><i class="fa-solid fa-envelope me-1"></i>Nuevo</span>
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <!-- Ciudadano -->
+                                    <td>
+                                        <strong class="text-dark">{{ msg.nombre }}</strong>
+                                    </td>
+                                    
+                                    <!-- Contacto -->
+                                    <td class="small">
+                                        <a href="mailto:{{ msg.email }}" class="text-decoration-none text-primary"><i class="fa-regular fa-envelope me-1"></i>{{ msg.email }}</a>
+                                    </td>
+
+                                    <!-- Asunto -->
+                                    <td>
+                                        <span class="badge bg-info text-dark">{{ msg.asunto }}</span>
+                                    </td>
+                                    
+                                    <!-- Fecha -->
+                                    <td class="small text-muted">{{ msg.date_submitted }}</td>
+                                    
+                                    <!-- Acciones -->
+                                    <td class="text-end">
+                                        <div class="d-flex gap-2 justify-content-end">
+                                            <!-- Botón Ver Detalle -->
+                                            <button class="btn btn-sm btn-outline-info btn-view-msg" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#viewMsgModal"
+                                                    data-id="{{ msg.id }}"
+                                                    data-nombre="{{ msg.nombre }}"
+                                                    data-email="{{ msg.email }}"
+                                                    data-asunto="{{ msg.asunto }}"
+                                                    data-fecha="{{ msg.date_submitted }}"
+                                                    data-mensaje="{{ msg.mensaje }}">
+                                                <i class="fa-solid fa-eye"></i> Ver
+                                            </button>
+
+                                            <!-- Botón Marcar Leído / No Leído -->
+                                            <form action="{{ url_for('marcar_leido_mensaje', msg_id=msg.id) }}" method="POST" class="d-inline">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="btn btn-sm {% if msg.leido %}btn-outline-secondary{% else %}btn-outline-success{% endif %}" title="{% if msg.leido %}Marcar como pendiente{% else %}Marcar como leído{% endif %}">
+                                                    <i class="fa-solid {% if msg.leido %}fa-envelope{% else %}fa-envelope-open-text{% endif %}"></i>
+                                                </button>
+                                            </form>
+                                            
+                                            <!-- Botón Eliminar -->
+                                            <form action="{{ url_for('eliminar_mensaje', msg_id=msg.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente este mensaje del buzón?');" class="d-inline">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <!-- Estado Vacío del Buzón -->
+                    <div class="text-center py-5">
+                        <i class="fa-solid fa-inbox fa-3x text-muted mb-3"></i>
+                        <h3 class="fs-5 text-dark mb-1 fw-bold">Buzón Vacío</h3>
+                        <p class="text-muted mb-0">Aún no se han recibido comentarios, sugerencias ni reportes de la ciudadanía.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</section>
+
+<!-- MODAL DE SUBIDA -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white" style="background-color: var(--gob-green-dark) !important;">
+                <h5 class="modal-title fw-bold" id="uploadModalLabel">
+                    <i class="fa-solid fa-cloud-arrow-up me-2 text-warning"></i>Subir Material de Integridad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('subir_infografia') }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-body p-4">
+                    
+                    <!-- Selección de Mes -->
+                    <div class="mb-3">
+                        <label for="formMonth" class="form-label fw-bold text-dark">Mes Correspondiente</label>
+                        <select class="form-select gob-form-control" id="formMonth" name="month" required>
+                            <option value="" disabled selected>Selecciona el mes...</option>
+                            {% for m in months %}
+                            <option value="{{ m.id }}">{{ m.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Título -->
+                    <div class="mb-3">
+                        <label for="formTitle" class="form-label fw-bold text-dark">Título de la Infografía</label>
+                        <input type="text" class="form-control gob-form-control" id="formTitle" name="title" placeholder="Ej. Código de Ética y Conducta" required maxlength="100">
+                    </div>
+                    
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label for="formDesc" class="form-label fw-bold text-dark">Descripción / Concepto</label>
+                        <textarea class="form-control gob-form-control" id="formDesc" name="description" rows="3" placeholder="Ingresa los detalles o valores a destacar..." maxlength="250"></textarea>
+                    </div>
+                    
+                    <!-- Archivo -->
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label fw-bold text-dark">Seleccionar Archivo</label>
+                        <input class="form-control gob-form-control" type="file" id="formFile" name="file" accept=".png,.jpg,.jpeg,.gif,.pdf,.webp" required>
+                        <div class="form-text small text-muted">Formatos permitidos: PNG, JPG, JPEG, GIF, WEBP o PDF. Máximo: 16 MB.</div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-gob-primary">
+                        <i class="fa-solid fa-check me-2"></i>Subir y Registrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE EDICIÓN -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white" style="background-color: var(--gob-green-medium) !important;">
+                <h5 class="modal-title fw-bold" id="editModalLabel">
+                    <i class="fa-solid fa-pen-to-square me-2 text-warning"></i>Editar Registro de Integridad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editForm" action="" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-body p-4">
+                    
+                    <!-- Selección de Mes -->
+                    <div class="mb-3">
+                        <label for="editMonth" class="form-label fw-bold text-dark">Mes Correspondiente</label>
+                        <select class="form-select gob-form-control" id="editMonth" name="month" required>
+                            {% for m in months %}
+                            <option value="{{ m.id }}">{{ m.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Título -->
+                    <div class="mb-3">
+                        <label for="editTitle" class="form-label fw-bold text-dark">Título de la Infografía</label>
+                        <input type="text" class="form-control gob-form-control" id="editTitle" name="title" placeholder="Ej. Código de Ética y Conducta" required maxlength="100">
+                    </div>
+                    
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label for="editDesc" class="form-label fw-bold text-dark">Descripción / Concepto</label>
+                        <textarea class="form-control gob-form-control" id="editDesc" name="description" rows="3" placeholder="Ingresa los detalles o valores a destacar..." maxlength="250"></textarea>
+                    </div>
+                    
+                    <!-- Archivo Opcional -->
+                    <div class="mb-3">
+                        <label for="editFile" class="form-label fw-bold text-dark">Reemplazar Archivo <span class="text-muted font-normal fw-normal">(Opcional)</span></label>
+                        <input class="form-control gob-form-control" type="file" id="editFile" name="file" accept=".png,.jpg,.jpeg,.gif,.pdf,.webp">
+                        <div class="form-text small text-muted">Seleccione un archivo solo si desea reemplazar el actual. Formatos permitidos: PNG, JPG, JPEG, GIF, WEBP o PDF.</div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-gob-primary">
+                        <i class="fa-solid fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL VER MENSAJE DE BUZÓN -->
+<div class="modal fade" id="viewMsgModal" tabindex="-1" aria-labelledby="viewMsgModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title fw-bold" id="viewMsgModalLabel">
+                    <i class="fa-solid fa-envelope-open-text me-2 text-warning"></i>Detalle de Solicitud del Ciudadano
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-0">Remitente / Ciudadano</label>
+                        <div class="fw-bold text-dark fs-5" id="msgModalNombre"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-0">Correo Electrónico</label>
+                        <div><a href="#" id="msgModalEmailLink" class="fw-bold text-primary text-decoration-none"></a></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-0">Tipo de Solicitud</label>
+                        <div><span class="badge bg-info text-dark fs-6" id="msgModalAsunto"></span></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-0">Fecha de Recepción</label>
+                        <div class="text-secondary small fw-semibold" id="msgModalFecha"></div>
+                    </div>
+                </div>
+                
+                <hr class="my-3">
+                
+                <div>
+                    <label class="form-label fw-bold text-dark">Contenido del Mensaje / Reporte:</label>
+                    <div class="p-3 bg-light rounded-3 border text-dark" style="white-space: pre-wrap; min-height: 120px;" id="msgModalMensaje"></div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <a href="#" id="replyEmailBtn" class="btn btn-gob-primary">
+                    <i class="fa-solid fa-reply me-2"></i>Responder por Correo
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Manejo de modal de edición
+        const editModal = document.getElementById('editModal');
+        const editForm = document.getElementById('editForm');
+        const editMonth = document.getElementById('editMonth');
+        const editTitle = document.getElementById('editTitle');
+        const editDesc = document.getElementById('editDesc');
+        const editFile = document.getElementById('editFile');
+        
+        const editButtons = document.querySelectorAll('.btn-edit');
+        
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const title = this.getAttribute('data-title');
+                const month = this.getAttribute('data-month');
+                const description = this.getAttribute('data-description');
+                
+                editForm.action = `/admin/editar/${id}`;
+                editMonth.value = month;
+                editTitle.value = title;
+                editDesc.value = description;
+                editFile.value = '';
+            });
+        });
+
+        // Manejo de modal de ver mensaje del buzón
+        const viewMsgButtons = document.querySelectorAll('.btn-view-msg');
+        const msgModalNombre = document.getElementById('msgModalNombre');
+        const msgModalEmailLink = document.getElementById('msgModalEmailLink');
+        const msgModalAsunto = document.getElementById('msgModalAsunto');
+        const msgModalFecha = document.getElementById('msgModalFecha');
+        const msgModalMensaje = document.getElementById('msgModalMensaje');
+        const replyEmailBtn = document.getElementById('replyEmailBtn');
+
+        viewMsgButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const nombre = this.getAttribute('data-nombre');
+                const email = this.getAttribute('data-email');
+                const asunto = this.getAttribute('data-asunto');
+                const fecha = this.getAttribute('data-fecha');
+                const mensaje = this.getAttribute('data-mensaje');
+
+                msgModalNombre.textContent = nombre;
+                msgModalEmailLink.textContent = email;
+                msgModalEmailLink.href = `mailto:${email}`;
+                msgModalAsunto.textContent = asunto;
+                msgModalFecha.textContent = fecha;
+                msgModalMensaje.textContent = mensaje;
+                replyEmailBtn.href = `mailto:${email}?subject=RE: ${encodeURIComponent(asunto)} - San Fernando, Chiapas`;
+            });
+        });
+
+        // Si se redirecciona con #buzon-tab-pane en la URL, activar la pestaña correspondiente
+        if (window.location.hash === '#buzon-tab-pane') {
+            const buzonTabTrigger = document.querySelector('#buzon-tab');
+            if (buzonTabTrigger) {
+                const tab = new bootstrap.Tab(buzonTabTrigger);
+                tab.show();
+            }
+        }
+    });
+</script>
+{% endblock %}

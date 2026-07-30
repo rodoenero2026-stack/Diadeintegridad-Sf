@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Día por la Integridad | San Fernando, Chiapas{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-gob">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="badge bg-warning text-dark mb-3 px-3 py-2 fs-6 fw-bold border border-white">PORTAL OFICIAL GUBERNAMENTAL</span>
+                <h1 class="hero-title">Día por la <span>Integridad</span></h1>
+                <p class="hero-subtitle">
+                    H. Ayuntamiento de San Fernando, Chiapas. Comprometidos con la consolidación de un gobierno honesto, eficiente y transparente al servicio de nuestra gente.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{{ url_for('actividades') }}" class="btn-gob-secondary">
+                        <i class="fa-solid fa-images me-2"></i>Ver Infografías de Integridad
+                    </a>
+                    <a href="{{ url_for('contacto') }}" class="btn-gob-outline text-white border-white">
+                        <i class="fa-solid fa-inbox me-2"></i>Buzón de Integridad
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <!-- Tarjeta Decorativa de Integridad -->
+                <div class="p-4 rounded-4 shadow-lg border border-white border-opacity-10 text-center" style="background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(10px);">
+                    <div class="mb-3 text-warning" style="font-size: 3.5rem;">
+                        <i class="fa-solid fa-scale-balanced text-warning"></i>
+                    </div>
+                    <h3 class="fs-4 text-white">Administración Pública Ética</h3>
+                    <p class="text-white text-opacity-75 small">
+                        "La rectitud y la honestidad en el servicio público son compromisos irrenunciables con el pueblo de San Fernando."
+                    </p>
+                    <div class="d-inline-block border-top border-white border-opacity-25 pt-2 mt-2 w-100">
+                        <span class="text-warning fw-bold small">Cada 9 de Mes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Presentación del Programa -->
+<section class="section-padding bg-white">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <div class="pe-lg-4">
+                    <h2 class="section-title-left">Presentación Institucional</h2>
+                    <p class="lead text-muted">
+                        El programa <strong>"Día por la Integridad"</strong> es impulsado por la Presidencia Municipal de San Fernando, Chiapas, con el propósito fundamental de promover y consolidar la ética pública.
+                    </p>
+                    <p class="text-secondary">
+                        Alineándonos con las mejores prácticas en transparencia y lucha contra la corrupción, el día 9 de cada mes conmemoramos la importancia de los valores éticos en el H. Ayuntamiento. A través de este portal, ponemos al alcance de la ciudadanía las infografías de sensibilización que nuestros servidores públicos revisan, analizan y aplican.
+                    </p>
+                    <p class="text-secondary">
+                        Promovemos una gestión donde la rendición de cuentas, la honestidad y el respeto por los derechos de todos sean las directrices principales de nuestras actividades diarias en beneficio de los sanfernandenses.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="p-4 p-md-5 rounded-4 shadow-md bg-light border-start border-4" style="border-left-color: var(--gob-green-dark) !important;">
+                    <h3 class="text-success mb-3 fw-bold" style="color: var(--gob-green-medium) !important;"><i class="fa-solid fa-bullseye me-2"></i>Objetivos de Transparencia 2026</h3>
+                    <p class="text-secondary">
+                        Nuestra meta es forjar un equipo de servidores públicos comprometido con las buenas prácticas administrativas y éticas mediante la capacitación y la difusión constante:
+                    </p>
+                    <ul class="list-unstyled mt-4 text-secondary">
+                        <li class="mb-3"><i class="fa-solid fa-circle-check text-success me-2" style="color: var(--gob-gold-dark) !important;"></i> Difusión de lineamientos de honestidad y combate al conflicto de interés.</li>
+                        <li class="mb-3"><i class="fa-solid fa-circle-check text-success me-2" style="color: var(--gob-gold-dark) !important;"></i> Monitoreo constante del cumplimiento del Código de Ética.</li>
+                        <li class="mb-3"><i class="fa-solid fa-circle-check text-success me-2" style="color: var(--gob-gold-dark) !important;"></i> Habilitación de canales seguros de denuncia para garantizar la legalidad.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pilares y Valores de la Integridad -->
+<section class="section-padding">
+    <div class="container">
+        <h2 class="text-center section-title">Valores Rectores de Nuestra Administración</h2>
+        <p class="text-center text-muted mx-auto mb-5" style="max-width: 600px;">
+            Los principios morales que rigen las decisiones públicas de todos los integrantes de la administración de San Fernando.
+        </p>
+        
+        <div class="row g-4">
+            <!-- Valor 1: Honestidad -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-gob">
+                    <div class="card-header-accent"></div>
+                    <div class="card-body p-4 text-center">
+                        <div class="card-gob-icon">
+                            <i class="fa-solid fa-hand-holding-heart"></i>
+                        </div>
+                        <h4 class="fs-5 mb-3 text-dark">Honestidad</h4>
+                        <p class="text-muted small mb-0">
+                            Actuar con rectitud e integridad, priorizando el bienestar colectivo frente a intereses individuales.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Valor 2: Transparencia -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-gob">
+                    <div class="card-header-accent"></div>
+                    <div class="card-body p-4 text-center">
+                        <div class="card-gob-icon">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                        <h4 class="fs-5 mb-3 text-dark">Transparencia</h4>
+                        <p class="text-muted small mb-0">
+                            Apertura total a la rendición de cuentas, permitiendo que la ciudadanía audite las acciones gubernamentales.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Valor 3: Respeto -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-gob">
+                    <div class="card-header-accent"></div>
+                    <div class="card-body p-4 text-center">
+                        <div class="card-gob-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <h4 class="fs-5 mb-3 text-dark">Respeto</h4>
+                        <p class="text-muted small mb-0">
+                            Trato igualitario y con dignidad para todas las familias y comunidades de San Fernando, Chiapas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Valor 4: Eficacia -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-gob">
+                    <div class="card-header-accent"></div>
+                    <div class="card-body p-4 text-center">
+                        <div class="card-gob-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h4 class="fs-5 mb-3 text-dark">Eficacia</h4>
+                        <p class="text-muted small mb-0">
+                            Desempeñar nuestras responsabilidades con agilidad y orientación a resultados de beneficio social.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Banner de Enlace a Actividades -->
+<section class="section-padding bg-success text-white text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, var(--gob-green-dark), var(--gob-green-medium)) !important;">
+    <div class="container">
+        <h2 class="fw-bold mb-3">Agenda Mensual de Integridad Municipal</h2>
+        <p class="lead mx-auto mb-4" style="max-width: 700px;">
+            Cada mes publicamos infografías temáticas con las directrices éticas que fortalecen a nuestro gobierno. Consulta la galería pública.
+        </p>
+        <a href="{{ url_for('actividades') }}" class="btn btn-warning btn-lg fw-bold text-dark px-4 py-3 border-2 border-white shadow" style="background-color: var(--gob-gold) !important; border-color: var(--gob-gold) !important;">
+            <i class="fa-solid fa-images me-2"></i>Explorar Galería de Infografías 2026
+        </a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Día por la Integridad - San Fernando, Chiapas{% endblock %}</title>
+    
+    <!-- Meta tags SEO -->
+    <meta name="description" content="Portal oficial del programa Día por la Integridad de la Presidencia Municipal de San Fernando, Chiapas. Transparencia, ética y rendición de cuentas.">
+    <meta name="keywords" content="Integridad, San Fernando Chiapas, Presidencia Municipal, Transparencia, Gobierno, Infografias, Actividades 2026">
+    <meta name="author" content="Presidencia Municipal de San Fernando, Chiapas">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome para iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Estilos personalizados -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Barra Superior de Identidad Institucional -->
+    <div class="gov-top-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fa-solid fa-landmark me-2"></i> H. AYUNTAMIENTO DE SAN FERNANDO, CHIAPAS 2024 - 2027
+            </div>
+            <div>
+                <span class="me-3 d-none d-md-inline"><i class="fa-solid fa-shield-halved me-1"></i> Unidad de Prevención y Honestidad</span>
+                {% if session.get('logged_in') %}
+                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-user-shield me-1"></i> Modo Admin</span>
+                {% else %}
+                    <a href="{{ url_for('login') }}"><i class="fa-solid fa-lock me-1"></i> Acceso Interno</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegación Principal -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-gob sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('inicio') }}">
+                <img src="{{ url_for('static', filename='img/logo.webp'
+                ) }}" alt="Logo San Fernando" class="logo-img">
+                <div>
+                    Presidencia Municipal
+                    <span class="sub">San Fernando, Chiapas</span>
+                </div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGobContent" aria-controls="navbarGobContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarGobContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'inicio' %}active{% endif %}" href="{{ url_for('inicio') }}">
+                            <i class="fa-solid fa-house me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'actividades' %}active{% endif %}" href="{{ url_for('actividades') }}">
+                            <i class="fa-solid fa-calendar-days me-1"></i> Actividades 2026
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == 'contacto' %}active{% endif %}" href="{{ url_for('contacto') }}">
+                            <i class="fa-solid fa-address-book me-1"></i> Contacto y Buzón
+                        </a>
+                    </li>
+                    
+                    {% if session.get('logged_in') %}
+                    <li class="nav-item ms-lg-2">
+                        <a class="nav-link {% if active_page == 'admin' %}active{% endif %} text-warning" href="{{ url_for('admin_panel') }}">
+                            <i class="fa-solid fa-gauge-high me-1"></i> Panel Admin
+                        </a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-sm btn-outline-light px-3 py-1 mt-2 mt-lg-0" href="{{ url_for('logout') }}">
+                            <i class="fa-solid fa-right-from-bracket me-1"></i> Salir
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Notificaciones flash de Flask -->
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-gob alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {% if category == 'success' %}
+                            <i class="fa-solid fa-circle-check me-2"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fa-solid fa-circle-exclamation me-2"></i>
+                        {% else %}
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                        {% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Contenido Principal Dinámico -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer class="footer-gob">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-5 col-md-12">
+                    <div class="footer-logo">
+                        <span>Presidencia Municipal</span> de San Fernando, Chiapas
+                    </div>
+                    <p class="footer-text">
+                        Órgano Interno de Control y H. Ayuntamiento de San Fernando, Chiapas.<br>
+                        Comprometidos con el desarrollo integral, la legalidad y la transparencia de la administración pública municipal.
+                    </p>
+                    <p class="footer-text mt-3">
+                        <i class="fa-solid fa-calendar-check me-2 text-warning"></i> <strong>Día por la Integridad:</strong> Conmemoración mensual para fomentar los valores éticos en el servicio público.
+                    </p>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-links-title">Enlaces Útiles</div>
+                    <a class="footer-link" href="{{ url_for('inicio') }}"><i class="fa-solid fa-angle-right me-1 text-warning"></i> Inicio y Presentación</a>
+                    <a class="footer-link" href="{{ url_for('actividades') }}"><i class="fa-solid fa-angle-right me-1 text-warning"></i> Galería de Actividades 2026</a>
+                    <a class="footer-link" href="{{ url_for('contacto') }}"><i class="fa-solid fa-angle-right me-1 text-warning"></i> Datos de Contacto y Buzón</a>
+                    {% if not session.get('logged_in') %}
+                        <a class="footer-link" href="{{ url_for('login') }}"><i class="fa-solid fa-angle-right me-1 text-warning"></i> Acceso Administrador</a>
+                    {% else %}
+                        <a class="footer-link" href="{{ url_for('admin_panel') }}"><i class="fa-solid fa-angle-right me-1 text-warning"></i> Panel de Administración</a>
+                    {% endif %}
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-links-title">Ubicación y Horario</div>
+                    <p class="footer-text mb-2">
+                        <i class="fa-solid fa-location-dot me-2 text-warning"></i> Ayuntamiento Municipal: Calle Central Norte s/n, Colonia Centro, San Fernando, Chiapas. C.P. 29120.
+                    </p>
+                    <p class="footer-text mb-2">
+                        <i class="fa-solid fa-clock me-2 text-warning"></i> Lunes a Viernes de 8:00 AM a 4:00 PM
+                    </p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom text-center">
+                <p class="mb-0">&copy; 2026 H. Ayuntamiento de San Fernando, Chiapas.</p>
+                <p class="mb-0">Desarrollo by Rodo.</p> 
+                <p class="mb-0">Todos los derechos reservados.</p>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>
